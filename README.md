@@ -1,6 +1,7 @@
 # Circadian Rhythm Audit
 A self-tracking tool for uncovering your own natural cognitive rhythm
 
+![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22222075.svg)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Stack](https://img.shields.io/badge/stack-HTML%2FCSS%2FJS-blue)
 ![Build](https://img.shields.io/badge/build-none%20needed-lightgrey)
@@ -11,6 +12,8 @@ A self-tracking tool for uncovering your own natural cognitive rhythm
 Everything runs client-side. There is no backend and no account: results are stored locally in your own browser.
 
 Live demo: https://adityaratnam09.github.io/circadian-audit/
+
+Archived on Zenodo: https://doi.org/10.5281/zenodo.22222075
 
 ---
 
@@ -103,7 +106,14 @@ Use **Download graph (PNG)** for just the main chart, **Download results (CSV)**
 
 Works in any modern browser (Chrome, Firefox, Safari, Edge). Data is persisted using both a cookie and a `localStorage` fallback, since the two are restricted differently depending on the browser and how the page is served, so whichever mechanism actually works in your context is used automatically. Results won't carry over between, for example, a local copy and a deployed copy, or between different browsers or devices, since each is a separate storage context.
 
+## Citation
+
+If you use or reference this project, please cite:
+
+```text
+Ratnam, A. R. (2026). *Circadian Rhythm Audit* (Version 1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22222075
+```
+
 ## License
 
 MIT License. See `LICENSE` for details.
-
