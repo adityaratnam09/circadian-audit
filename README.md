@@ -13,8 +13,6 @@ Everything runs client-side. There is no backend and no account: results are sto
 
 Live demo: https://adityaratnam09.github.io/circadian-audit/
 
-Archived on Zenodo: https://doi.org/10.5281/zenodo.22222075
-
 ---
 
 ## Features
