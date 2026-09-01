@@ -1,0 +1,139 @@
+# Circadian Rhythm Audit
+A self-tracking tool for uncovering your own natural cognitive rhythm
+
+![License](https://img.shields.io/badge/license-MIT-green)
+![Stack](https://img.shields.io/badge/stack-HTML%2FCSS%2FJS-blue)
+![Build](https://img.shields.io/badge/build-none%20needed-lightgrey)
+![Storage](https://img.shields.io/badge/storage-client--side%20only-lightgrey)
+
+**Circadian Rhythm Audit** is a single-page web app for tracking how your cognitive performance rises and falls across the day. Run a short reaction, math, or memory test a few times a day and it builds a personal map of your reaction speed, mental sharpness, and memory across the 24-hour clock, so you can see when your brain is sharpest and plan study, work, or exercise around it.
+
+Everything runs client-side. There is no backend and no account: results are stored locally in your own browser.
+
+Live demo: _add your deployed URL here once you've published it (see Deploying below)_
+
+---
+
+## Features
+
+- **Reaction Time test**: a box waits, then turns green after a random delay. You click as fast as you can, and the result is averaged over three trials in milliseconds, similar in spirit to the Human Benchmark reaction time test.
+- **Math Sprint test**: counts how many simple arithmetic problems you can solve correctly in 60 seconds.
+- **Memory Span test**: shows an increasing sequence of digits and records the longest sequence you can recall correctly.
+- **Performance chart**: all three tests compared on one relative scale, calculated against your own best and worst attempts for each test, so it becomes more meaningful the more results you log. Hover any point to see the exact value behind it.
+- **Raw-value charts**: the same data again, but as three separate charts, one per test, each on its own natural scale and in its own real-world units (milliseconds, correct answers, digit span), for reading off exact numbers rather than a relative comparison.
+- **Circadian Score**: a composite 0-100 score built from up to three sub-scores rather than raw test performance, Amplitude (how strong the contrast is between your best and worst hours), Consistency (how reliably you perform when tested at the same hour on different days), and Alignment (how closely your peak hour matches when you actually plan to do focused work, once you set that time). Comes with a peak focus window and a slump/recovery window, each with a plain-language suggestion.
+- **Chronotype wheel**: a 24-hour clock face, midnight at the top and noon at the bottom, running clockwise. The further the shaded region bulges out toward the rim at a given hour, the sharper your performance was around that time; a dent toward the centre shows a slump. It fills in and rescales automatically as you log more results.
+- **Circadian spirit animal**: a badge (Early Bird, Afternoon Ace, Sunset Sprinter, or Night Owl) assigned from the hour your performance tends to peak, each with its own icon.
+- **Data tools**: log results by running a test or by adding entries manually (validated, whole numbers only for math and memory), upload or download the full log as a CSV file, download the graph as a PNG, and generate a printable PDF report of the charts, wheel, spirit animal, and summary directly from the browser's print dialog.
+
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/Circadian Rhythm Audit-page-1.jpg" alt="Report page 1: spirit animal, chronotype wheel, and Circadian Score" width="800">
+</p>
+<p align="center">
+  <img src="screenshots/Circadian Rhythm Audit-page-2.jpg" alt="Report page 2: performance chart and raw-value charts" width="800">
+</p>
+
+*(These are the two pages of the printable PDF report. Add your own to a `screenshots/` folder using the file names above, or update the paths to match.)*
+
+## How the Scoring Works
+
+Every test measures something in different units, reaction time in milliseconds, math sprint in correct answers, memory span in digits, so raw values aren't directly comparable to each other. Instead of judging you against a fixed, arbitrary benchmark, the app normalizes each test relative to your own logged results:
+
+```
+score = 100 × (value − your worst) / (your best − your worst)
+```
+
+100 always means "your personal best for that test," 0 always means "your personal worst," and everything else falls proportionally in between. This is what powers the performance chart, the chronotype wheel, and the "% of your range" column in the data log. It's personal and relative, not a universal score, and it gets more meaningful the more (and more varied) results you log. With only one distinct result for a test, there's nothing yet to compare it to, so it shows as a neutral 50 until a second, different result comes in.
+
+### The Circadian Score
+
+The Circadian Score is a separate, higher-level metric. It doesn't measure how good your results are, it measures whether there's a real daily rhythm to them, and whether that rhythm lines up with your life:
+
+- **Amplitude** = (best hour's combined score) − (worst hour's combined score), both already on the 0-100 relative scale above, so this is a plain percentage-point gap.
+- **Consistency** = 100 − 2×(weighted average standard deviation of your scores at hours you've tested more than once). Scores are bounded 0-100, so the maximum possible spread for repeated results is a standard deviation of 50, which is what the ×2 maps onto a full 0-100 range.
+- **Alignment** = 100 × (1 − circular distance between your peak hour and your stated focus hour ÷ 12). Only computed once you've set a focus hour in the Circadian Score panel.
+
+The Circadian Score itself is the average of whichever of these three are currently available, shown to one decimal place since a change in just one component can otherwise be small enough to round away.
+
+## Repository Structure
+
+```text
+.
+├── index.html          # The entire app: markup, styles, and logic in one file
+├── images/
+│   ├── chronotype-early-bird.png
+│   ├── chronotype-afternoon-ace.png
+│   ├── chronotype-sunset-sprinter.png
+│   ├── chronotype-night-owl.png
+│   └── chronotype-unknown.png   # shown before enough data has been logged to assign a chronotype
+├── screenshots/
+├── LICENSE
+└── README.md
+```
+
+There is no build step and no dependencies. It's a single static HTML file (with its five chronotype images) that runs entirely in the browser.
+
+---
+
+## Deploying
+
+### Option A: Netlify (drag and drop)
+
+1. Go to https://app.netlify.com/drop
+2. Drag the whole project folder onto the page. Make sure the five chronotype images are inside its `images/` subfolder, named exactly as listed above.
+3. Netlify gives you a live URL in a few seconds.
+
+### Option B: GitHub Pages
+
+1. Push this repository to GitHub.
+2. In the repo, go to **Settings → Pages**.
+3. Under **Source**, choose **Deploy from a branch**, pick `main` and `/ (root)`, then save.
+4. GitHub gives you a live URL (`https://<username>.github.io/<repo>/`) within a minute or two.
+
+### Option C: Run it locally
+
+A real local server is recommended over opening `index.html` directly by double-clicking it, since browsers can treat local files (`file://`) as restricted, sometimes one-off origins, which makes cookies and other storage behave unreliably. Serve the folder instead:
+
+```bash
+python3 -m http.server 8000
+```
+
+then visit `http://localhost:8000`.
+
+---
+
+## Usage
+
+### Logging data
+
+- Run any of the three tests in the browser and save the result, or
+- Use the data log section to add entries manually with any date and time, useful for backfilling a week of testing (math and memory values must be whole numbers), or
+- Use **Upload CSV** in the data log section to import a CSV file of entries at once.
+
+CSV columns needed: `date`, `time`, `test`, `value`.
+
+Test keys: `reaction` (ms), `math` (correct answers in 60 seconds), `memory` (digit span).
+
+### Setting your focus hour
+
+In the Circadian Score panel, the dropdown at the bottom lets you set the hour you usually want to do your hardest, most focused work. This is stored separately from your test results and unlocks the Alignment sub-score once set.
+
+### Getting a report
+
+Use **Download graph (PNG)** for just the main chart, **Download results (CSV)** for the raw data, or the report button to generate a printable PDF summary (charts, chronotype wheel, spirit animal, Circadian Score, and written analysis) straight from the browser's print dialog.
+
+---
+
+## Browser Support
+
+Works in any modern browser (Chrome, Firefox, Safari, Edge). Data is persisted using both a cookie and a `localStorage` fallback, since the two are restricted differently depending on the browser and how the page is served, so whichever mechanism actually works in your context is used automatically. Results won't carry over between, for example, a local copy and a deployed copy, or between different browsers or devices, since each is a separate storage context.
+
+## License
+
+MIT License. See `LICENSE` for details.
+
+## Author
+
+Aditya Rajiv Ratnam · [adityaratnam09@gmail.com](mailto:adityaratnam09@gmail.com)
